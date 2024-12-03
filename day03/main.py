@@ -11,29 +11,27 @@ def load_input(path: str) -> list[str]:
 
 def part_1(text: str) -> int:
     """Find all mul instructions and calculate them"""
-    regex = r"mul\(\d+,\d+\)"
+
+    regex = r"mul\((\d+),(\d+)\)" # Regex : mul([any int],[any int])
     result = re.findall(regex, text)
-    total_mul = 0
-    for mul in result:
-        numbers = mul.replace("mul(","").replace(")","").split(",")
-        total_mul += int(numbers[0]) * int(numbers[1])
+    total_mul = sum(int(num1) * int(num2) for num1, num2 in result)
     print("The total of all mul instruction is : ", total_mul)
 
 def part_2(text: str) -> int:
     """Find all mul instructions and calculate them"""
 
     # List of regex needed
-    regex_mul = r"mul\(\d+,\d+\)"
-    regex_do = r"do\(\)"
-    regex_dont = r"don't\(\)"
+    regex_mul = r"mul\((\d+),(\d+)\)" # Regex : mul([any int],[any int])
+    regex_do = r"do\(\)" # Regex : do()
+    regex_dont = r"don't\(\)" # Regex : don't()
 
+    # Instructions are stored in tuple (index, instruction)
     tuples = []
 
     # Find all mul instruction followed with their index
     result = re.findall(regex_mul, text)
     result_index = [x.start() for x in re.finditer(regex_mul, text)]
-    for i, value in zip(result_index, result):
-        numbers = value.replace("mul(","").replace(")","").split(",")
+    for i, numbers in zip(result_index, result):
         tuples.append((i, int(numbers[0]) * int(numbers[1])))
 
     # Find all do instruction followed by their index
