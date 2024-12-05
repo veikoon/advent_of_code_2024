@@ -16,19 +16,19 @@ def part_1(text: str) -> int:
     word_count = 0
 
     # Creating translated matrix of text input (read as collumn instead of lines)
-    translated_text = map(list, zip(*text))
+    translated_text = [''.join(line) for line in zip(*text)]
 
     # Creating diagonal
     max_col = len(text[0])
     max_row = len(text)
-    fdiag = [[] for _ in range(max_row + max_col - 1)]
-    bdiag = [[] for _ in range(len(fdiag))]
+    fdiag = [""] * (max_row + max_col - 1)
+    bdiag = [""] * len(fdiag)
     min_bdiag = -max_row + 1
 
     for x in range(max_col):
         for y in range(max_row):
-            fdiag[x+y].append(text[y][x])
-            bdiag[x-y-min_bdiag].append(text[y][x])
+            fdiag[x+y] += text[y][x]
+            bdiag[x-y-min_bdiag] += text[y][x]
 
     # Horizontal
     for line in text:
@@ -36,17 +36,14 @@ def part_1(text: str) -> int:
 
     # Vertical
     for line in translated_text:
-        line = ''.join(line)
         word_count += len(re.findall(word, line)) + len(re.findall(word[::-1], line))
 
     # First diagonal
     for line in fdiag:
-        line = ''.join(line)
         word_count += len(re.findall(word, line)) + len(re.findall(word[::-1], line))
 
     # Second diagonal
     for line in bdiag:
-        line = ''.join(line)
         word_count += len(re.findall(word, line)) + len(re.findall(word[::-1], line))
 
     print("Total of XMAS word : ", word_count)
